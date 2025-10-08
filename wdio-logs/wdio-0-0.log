@@ -1,0 +1,2 @@
+2025-10-08T01:04:35.955Z INFO @wdio/local-runner: Run worker command: run
+2025-10-08T01:04:36.126Z INFO @wdio/utils: Connecting to existing driver at http://127.0.0.1:59570/

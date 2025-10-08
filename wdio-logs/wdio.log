@@ -1,0 +1,5 @@
+2025-10-08T01:04:34.992Z INFO @wdio/xvfb: XvfbManager.init() called
+2025-10-08T01:04:34.992Z INFO @wdio/xvfb: Xvfb not needed on current platform
+2025-10-08T01:04:35.007Z INFO @wdio/xvfb:ProcessFactory: xvfb-run not found, falling back to regular fork
+2025-10-08T01:04:35.007Z INFO @wdio/xvfb:ProcessFactory: ProcessFactory: shouldRun=false, isAvailable=false
+2025-10-08T01:04:35.007Z INFO @wdio/xvfb:ProcessFactory: Creating worker process with regular fork
