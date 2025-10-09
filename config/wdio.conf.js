@@ -3,14 +3,22 @@ const path = require('path');
 exports.config = {
 
         logLevel: 'error',
-  reporters: ['dot'],
+    reporters: [
+    'spec',
+    ['allure', {
+      // write results into <repoRoot>/reports/allure-results
+      outputDir: path.resolve(__dirname, '../reports/allure-results'),
+      disableWebdriverStepsReporting: true, // keep logs clean
+      disableWebdriverScreenshotsReporting: false, // attach screenshots automatically
+    }],
+  ],
   logLevels: {
     webdriver: 'error',
     '@wdio/appium-service': 'error',
     '@wdio/cli': 'error',
     '@wdio/local-runner': 'error',
   },
-  outputDir: './wdio-logs',
+  outputDir: '../reports/allure-results',
 
 
   
@@ -151,7 +159,7 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
+    
 
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
@@ -319,4 +327,28 @@ exports.config = {
     */
     // afterAssertion: function(params) {
     // }
+// =====================================================
+//  Hooks for test lifecycle
+// =====================================================
+
+before: async function (){
+    console.log('\n========== TEST SESSION START ==========');
+}, 
+
+beforeTest: async function (test, context) {
+    console.log(`\n--- STARTING TEST: ${test.title} ---`);
+},
+
+afterTest: async function (test, context, { passed}) {
+    if (passed) {
+        console.log(`--- Passed : ${test.title} ---`);
+    }else {
+        console.log(`--- Failed : ${test.title} ---`);
+        await browser.takeScreenshot();
+    }
+},
+
+after: async function (){
+    console.log('\n========== TEST SESSION END ==========\n');
+}
 }
