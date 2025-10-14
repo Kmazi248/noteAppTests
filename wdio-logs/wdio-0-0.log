@@ -1,2 +1,11 @@
-2025-10-09T01:18:44.121Z INFO @wdio/local-runner: Run worker command: run
-2025-10-09T01:18:44.274Z INFO @wdio/utils: Connecting to existing driver at http://127.0.0.1:53124/
+2025-10-11T03:29:34.708Z INFO @wdio/local-runner: Run worker command: run
+2025-10-11T03:29:35.177Z INFO @wdio/utils: Connecting to existing driver at http://127.0.0.1:52341/
+2025-10-11T03:29:58.067Z ERROR @wdio/utils:shim: TypeError: Cannot read properties of undefined (reading 'set')
+    at Object.before (C:\Users\Karl.Mazi\Documents\Appium\codeset\tut\webdriverio-appium\config\wdio.conf.js:357:31)
+    at <anonymous> (C:\Users\Karl.Mazi\Documents\Appium\codeset\tut\webdriverio-appium\node_modules\@wdio\utils\build\index.js:941:22)
+    at new Promise (<anonymous>)
+    at <anonymous> (C:\Users\Karl.Mazi\Documents\Appium\codeset\tut\webdriverio-appium\node_modules\@wdio\utils\build\index.js:938:45)
+    at Array.map (<anonymous>)
+    at executeHooksWithArgs (C:\Users\Karl.Mazi\Documents\Appium\codeset\tut\webdriverio-appium\node_modules\@wdio\utils\build\index.js:938:31)
+    at Runner.run (file:///C:/Users/Karl.Mazi/Documents/Appium/codeset/tut/webdriverio-appium/node_modules/@wdio/runner/build/index.js:711:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
