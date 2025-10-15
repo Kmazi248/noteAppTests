@@ -1,6 +1,11 @@
-2025-10-11T03:29:30.845Z INFO @wdio/shared-store-service: Started shared server on port 52340
-2025-10-11T03:29:33.241Z INFO @wdio/xvfb: XvfbManager.init() called
-2025-10-11T03:29:33.241Z INFO @wdio/xvfb: Xvfb not needed on current platform
-2025-10-11T03:29:33.257Z INFO @wdio/xvfb:ProcessFactory: xvfb-run not found, falling back to regular fork
-2025-10-11T03:29:33.257Z INFO @wdio/xvfb:ProcessFactory: ProcessFactory: shouldRun=false, isAvailable=false
-2025-10-11T03:29:33.257Z INFO @wdio/xvfb:ProcessFactory: Creating worker process with regular fork
+2025-10-15T00:42:32.222Z INFO @wdio/shared-store-service: Started shared server on port 50509
+2025-10-15T00:42:34.372Z INFO @wdio/xvfb: XvfbManager.init() called
+2025-10-15T00:42:34.372Z INFO @wdio/xvfb: Xvfb not needed on current platform
+2025-10-15T00:42:34.372Z INFO @wdio/xvfb: XvfbManager.init() called
+2025-10-15T00:42:34.372Z INFO @wdio/xvfb: Xvfb not needed on current platform
+2025-10-15T00:42:34.388Z INFO @wdio/xvfb:ProcessFactory: xvfb-run not found, falling back to regular fork
+2025-10-15T00:42:34.388Z INFO @wdio/xvfb:ProcessFactory: ProcessFactory: shouldRun=false, isAvailable=false
+2025-10-15T00:42:34.388Z INFO @wdio/xvfb:ProcessFactory: Creating worker process with regular fork
+2025-10-15T00:42:34.407Z INFO @wdio/xvfb:ProcessFactory: xvfb-run not found, falling back to regular fork
+2025-10-15T00:42:34.407Z INFO @wdio/xvfb:ProcessFactory: ProcessFactory: shouldRun=false, isAvailable=false
+2025-10-15T00:42:34.408Z INFO @wdio/xvfb:ProcessFactory: Creating worker process with regular fork

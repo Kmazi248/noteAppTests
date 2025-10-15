@@ -1,7 +1,7 @@
-2025-10-11T03:29:34.708Z INFO @wdio/local-runner: Run worker command: run
-2025-10-11T03:29:35.177Z INFO @wdio/utils: Connecting to existing driver at http://127.0.0.1:52341/
-2025-10-11T03:29:58.067Z ERROR @wdio/utils:shim: TypeError: Cannot read properties of undefined (reading 'set')
-    at Object.before (C:\Users\Karl.Mazi\Documents\Appium\codeset\tut\webdriverio-appium\config\wdio.conf.js:357:31)
+2025-10-15T00:42:35.329Z INFO @wdio/local-runner: Run worker command: run
+2025-10-15T00:42:35.545Z INFO @wdio/utils: Connecting to existing driver at http://127.0.0.1:50510/
+2025-10-15T00:42:42.098Z ERROR @wdio/utils:shim: TypeError: Cannot read properties of undefined (reading 'set')
+    at Object.before (C:\Users\Karl.Mazi\Documents\Appium\codeset\tut\webdriverio-appium\config\wdio.conf.js:339:31)
     at <anonymous> (C:\Users\Karl.Mazi\Documents\Appium\codeset\tut\webdriverio-appium\node_modules\@wdio\utils\build\index.js:941:22)
     at new Promise (<anonymous>)
     at <anonymous> (C:\Users\Karl.Mazi\Documents\Appium\codeset\tut\webdriverio-appium\node_modules\@wdio\utils\build\index.js:938:45)
