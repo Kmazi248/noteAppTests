@@ -1,8 +1,26 @@
 const path = require('path');
+const fs = require('fs');
+const ENV = (process.env.ENV_NAME || process.env.TEST_ENV || 'dev'). toLowerCase();
+
+const ENV_FILE = path.resolve(__dirname, `./env/${ENV}.env.js`);
+if (!fs.existsSync(ENV_FILE)) {
+  throw new Error(`No environment file found at ${ENV_FILE}(ENV="${ENV}")`);
+}
+const envConfig = require(ENV_FILE);
+
+const appPath = path.isAbsolute(envConfig.appPath)
+  ? envConfig.appPath
+  : path.resolve(process.cwd(), envConfig.appPath); 
+
+  const label = (envConfig.envName || ENV).toUpperCase();
+
+  const allure = require('@wdio/allure-reporter').default;
+
+
 
 exports.config = {
 
-        logLevel: 'error',
+        
     reporters: [
     'spec',
     ['allure', {
@@ -18,7 +36,7 @@ exports.config = {
     '@wdio/cli': 'error',
     '@wdio/local-runner': 'error',
   },
-  outputDir: '../reports/allure-results',
+  outputDir: path.resolve(__dirname, '../wdio-logs'),
 
 
   
@@ -77,8 +95,12 @@ exports.config = {
         'appium:udid': 'emulator-5554',
          'appium:platformVersion': '16',
         'appium:automationName': 'UiAutomator2',
-        "appium:app": path.join(process.cwd(), 'app', 'android', 'ColorNote+Notepad.apk'),
-        "appium:autoGrantPermissions": true
+        "appium:app": appPath,
+        "appium:autoGrantPermissions": true,
+
+        ...(envConfig.resetStrategy === 'fullReset'
+    ? { 'appium:fullReset': true }
+    : { 'appium:noReset': true }),
 
     }],
 
@@ -89,7 +111,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'info',
+    logLevel: envConfig.logLevel ?? 'info',
     //
     // Set specific log levels per logger
     // loggers:
@@ -129,12 +151,9 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: [
-    ['appium', {
-        
-        
-        logPath: './logs'
-    }]
+ services: [
+  ['appium', { logPath: './logs' }],
+  'shared-store'
 ],
 
 
@@ -145,24 +164,6 @@ exports.config = {
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
     framework: 'mocha',
-    
-    //
-    // The number of times to retry the entire specfile when it fails as a whole
-    // specFileRetries: 1,
-    //
-    // Delay in seconds between the spec file retry attempts
-    // specFileRetriesDelay: 0,
-    //
-    // Whether or not retried spec files should be retried immediately or deferred to the end of the queue
-    // specFileRetriesDeferred: false,
-    //
-    // Test reporter for stdout.
-    // The only one supported by default is 'dot'
-    // see also: https://webdriver.io/docs/dot-reporter
-    
-
-    // Options to be passed to Mocha.
-    // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
         timeout: 60000
@@ -333,6 +334,15 @@ exports.config = {
 
 before: async function (){
     console.log('\n========== TEST SESSION START ==========');
+    console.log(`🚀 Environment: ${label}`);
+    console.log(`📦 App path: ${appPath}`);
+    await browser.sharedStore.set('env', {
+        envName: envConfig.envName,
+        resetStrategy: envConfig.resetStrategy,
+        logLevel: envConfig.logLevel,
+        appPath: appPath
+
+    });
 }, 
 
 beforeTest: async function (test, context) {
@@ -340,6 +350,14 @@ beforeTest: async function (test, context) {
 },
 
 afterTest: async function (test, context, { passed}) {
+    const env = await browser.sharedStore.get('env');
+      if (env?.envName) {
+    // shows under Labels (easy to filter)
+    allure.addLabel('tag', env.envName);         // e.g., tag: sit
+
+    // shows under the "Environment" tab
+    allure.addEnvironment('ENV', env.envName);   // key=value pair
+  }
     if (passed) {
         console.log(`--- Passed : ${test.title} ---`);
     }else {

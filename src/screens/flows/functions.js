@@ -6,8 +6,10 @@ const log = require('../utils/logger');
 class EditNoteScreen {
     async skipTutorial() {
         log.step('Skipping tutorial');
-        await AddNoteScreen.waitAndClick(AddNoteScreen.SkipBtn);
-        await AddNoteScreen.waitFor(AddNoteScreen.AddNoteBtn);
+        if (await AddNoteScreen.isVisible(AddNoteScreen.SkipBtn, 3000)) {
+            await AddNoteScreen.waitAndClick(AddNoteScreen.SkipBtn);
+        }
+            await AddNoteScreen.waitFor(AddNoteScreen.AddNoteBtn);
     }
 
     async addAndSaveNote(title, note) {

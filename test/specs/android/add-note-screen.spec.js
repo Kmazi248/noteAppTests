@@ -30,3 +30,26 @@ describe('Notes', () => {
 
     })
 })
+
+describe('Notes again @smoke', () => {
+    it('add a new note, save changes & verify, then delete @smoke', async () => {
+
+      const title = data.uniqueTitle();
+      const note = data.sampleBody;
+
+        await EditNoteScreen.skipTutorial();
+        await EditNoteScreen.addAndSaveNote(title, note);
+        await driver.back();
+
+        // verify on list
+        await expect(AddNoteScreen.Titleprvw).toHaveText(title);
+        //delete note
+        await EditNoteScreen.deleteCurrentNote();
+        //verify note is deleted from list
+        await expect(AddNoteScreen.Titleprvw).not.toBeExisting();
+        // verify note is in trash
+        await EditNoteScreen.openTrash();
+        await expect(AddNoteScreen.Titleprvw).toHaveText(title);
+       
+    })
+})
