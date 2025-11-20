@@ -7,7 +7,7 @@ class AddNoteScreen extends BaseScreen {
     } 
 
     get AddNoteBtn() {
-        return $('id=com.socialnmobile.dictapps.notepad.color.note:id/img_add');
+        return $('id=com.socialnmobile.dictapps.notepad.color.note:id/main_btn1');
     }
     get AddTxtTypeNote() {
         return $('android=new UiSelector().text("Text")')
@@ -26,6 +26,33 @@ class AddNoteScreen extends BaseScreen {
     await this.waitAndClick(this.AddTxtTypeNote);
   }
 
+}
+
+class NoteListScreen extends BaseScreen {
+    get list() { 
+    return $('id=com.socialnmobile.dictapps.notepad.color.note:id/note_list'); 
+  }
+
+    byTitle(title) {
+     return this.list.$(
+    `android=new UiSelector().resourceId("com.socialnmobile.dictapps.notepad.color.note:id/title").text("${title}")`
+  );
+    }   
+
+    async openSavedNote() {
+    await this.waitAndClick(this.title);
+    }
+
+}
+
+class TrashScreen {
+  get list() { return $('id=com.socialnmobile.dictapps.notepad.color.note:id/note_list'); }
+  byTitle(title) {
+    return $(`//${'android.widget.ListView'}[@resource-id="com.socialnmobile.dictapps.notepad.color.note:id/note_list"]
+              //android.widget.TextView[@resource-id="com.socialnmobile.dictapps.notepad.color.note:id/title"
+                                     and @text="${title}"]`);
+  }
+  async waitForVisible() { await this.list.waitForDisplayed({ timeout: 5000 }); }
 }
 
 
@@ -63,14 +90,18 @@ class NoteScreen extends BaseScreen {
     }
 }
 
-class DiscardPopup extends BaseScreen {
+class DeleteNotePopup extends BaseScreen {
 
      get confirmBtn() {
         return $('id=android:id/button1')
     }
 
-     async confirm()    { await this.waitAndClick(this.confirmBtn); }
+    get cancelBtn() {
+        return $('id=android:id/button2')
+    }
 
+    async confirm()    { await this.waitAndClick(this.confirmBtn); }
+    async cancel()    { await this.waitAndClick(this.cancelBtn); }
 }
 
 class NoteListNav extends BaseScreen {
@@ -84,7 +115,9 @@ class NoteListNav extends BaseScreen {
 module.exports = {
   AddNoteScreen: new AddNoteScreen(),
   NoteScreen: new NoteScreen(),
- DiscardPopup: new DiscardPopup(),
-    NoteListNav: new NoteListNav()
+ DeleteNotePopup: new DeleteNotePopup(),
+    NoteListNav: new NoteListNav(),
+    NoteListScreen: new NoteListScreen(),
+    exports: new TrashScreen()
  
 };

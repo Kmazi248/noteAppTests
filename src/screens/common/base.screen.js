@@ -4,8 +4,10 @@ class BaseScreen {
         return el;
     }
 
-    async waitAndClick(el, timeout = 8000){
-        await el.waitForDisplayed({timeout});
+
+    async waitAndClick(selOrEl, timeout = 8000){
+        const el = typeof selOrEl === 'string' ? await $(selOrEl) : selOrEl;
+        await el.waitForDisplayed({ timeout });
         await el.click();
     }
 
@@ -20,13 +22,16 @@ class BaseScreen {
         await el.setValue(value);
     }
 
-    async isVisible(el, timeout = 8000) {
-        try{
-            await el.waitForDisplayed({timeout});
-            return true;
-        } catch{
-            return false;
-        }
+   async isVisible(selOrEl, timeout = 800) {
+    const el = typeof selOrEl === 'string' ? await $(selOrEl) : selOrEl;
+    try { await el.waitForDisplayed({ timeout }); return true; }
+    catch { return false; }
+  
+    }
+
+    async clearValue(el, timeout = 8000) {
+        await el.waitForDisplayed({timeout});
+        await el.clearValue();
     }
 }
 

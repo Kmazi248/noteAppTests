@@ -62,6 +62,54 @@ async function androidScrollToText(text) {
   const sel = `android=new UiScrollable(new UiSelector().scrollable(true)).scrollTextIntoView("${text}")`;
   return $(sel);
 }
+async function scrollToEdge(direction = 'down', { container = null, percent = 0.9, safetyMax = 20 } = {}) {
+  let i = 0;
+  while (i < safetyMax) {
+    i++;
+    try {
+      if (container) {
+        const el = typeof container === 'string' ? await $(container) : container;
+        const rect = await el.getRect();
+        const canScrollMore = await driver.execute?.('mobile: scrollGesture', {
+          left: rect.x, top: rect.y, width: rect.width, height: rect.height, direction, percent
+        });
+        if (!canScrollMore) break;
+      } else {
+        const size = await driver.getWindowSize();
+        const canScrollMore = await driver.execute?.('mobile: scrollGesture', {
+          left: 0, top: 200, width: size.width, height: size.height - 400, direction, percent
+        });
+        if (!canScrollMore) break;
+      }
+    } catch (_) {
+      // Fallback to one big swipe when scrollGesture isn't available
+      await swipe(direction, 0.9, 350);
+      // we can't know if we hit the edge; just loop up to safetyMax
+    }
+  }
+}
+
+// Portable scroll utilities
+async function getInsetBounds(el, insetRatio = 0.02) {
+  const r = await el.getRect();                 // {x,y,width,height} in px for *this* device
+  const ix = Math.round(r.width  * insetRatio);
+  const iy = Math.round(r.height * insetRatio);
+  return { left: r.x + ix, top: r.y + iy, width: r.width - 2*ix, height: r.height - 2*iy };
+}
+
+async function scrollToTop(containerSel, maxSwipes = 10) {
+  const container = await $(containerSel);      // e.g. id of RecyclerView/ScrollView/editor
+  const box = await getInsetBounds(container, 0.03);
+
+  for (let i = 0; i < maxSwipes; i++) {
+    const scrolled = await driver.execute('mobile: scrollGesture', {
+      ...box,
+      direction: 'up',
+      percent: 0.85,                            // 70–90% of the element height
+    });
+    if (!scrolled) break;                       // hit the top edge → stop
+  }
+}
 
 async function doubleTap(selOrEl, gapMs = 80) {
   const el = typeof selOrEl === 'string' ? await $(selOrEl) : selOrEl;
@@ -112,4 +160,6 @@ module.exports = {
   androidScrollToText,
   doubleTap,
   zoom,
+  scrollToEdge,
+  scrollToTop,
 };

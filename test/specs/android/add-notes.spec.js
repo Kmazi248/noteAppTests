@@ -9,7 +9,7 @@ describe('test', () => {
 
     })
 
-    it('add a new note, save changes & verify note', async () => {
+    it('@smoke add a new note, save changes & verify note', async () => {
         const addNote = await $('id=com.socialnmobile.dictapps.notepad.color.note:id/empty_text')
         const addtextbtn = await $('android=new UiSelector().text("Text")')
         const titlefield = await $('id=com.socialnmobile.dictapps.notepad.color.note:id/edit_title')

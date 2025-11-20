@@ -1,6 +1,10 @@
 const path = require('path');
 const fs = require('fs');
 const ENV = (process.env.ENV_NAME || process.env.TEST_ENV || 'dev'). toLowerCase();
+// RIGHT (go up one level, then into src/)
+const EditNoteScreen = require('../src/screens/flows/functions');
+
+
 
 const ENV_FILE = path.resolve(__dirname, `./env/${ENV}.env.js`);
 if (!fs.existsSync(ENV_FILE)) {
@@ -83,7 +87,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+    maxInstances: 2,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -91,10 +95,12 @@ exports.config = {
     //
     capabilities: [{
         // capabilities for local Appium web tests on an Android Emulator
+        maxInstances: 1,
         platformName: 'Android',
         'appium:udid': 'emulator-5554',
          'appium:platformVersion': '16',
         'appium:automationName': 'UiAutomator2',
+        'appium:systemPort': 8200,
         "appium:app": appPath,
         "appium:autoGrantPermissions": true,
 
@@ -102,7 +108,21 @@ exports.config = {
     ? { 'appium:fullReset': true }
     : { 'appium:noReset': true }),
 
-    }],
+    },
+   {
+    // Second emulator
+    maxInstances: 1,
+    platformName: 'Android',
+    'appium:udid': 'emulator-5556',
+    'appium:platformVersion': '16',   // same OS image as first
+    'appium:automationName': 'UiAutomator2',
+    'appium:systemPort': 8201,
+    'appium:app': appPath,
+    "appium:autoGrantPermissions": true,
+    ...(envConfig.resetStrategy === 'fullReset'
+      ? { 'appium:fullReset': true }
+      : { 'appium:noReset': true }),
+  }],
 
     //
     // ===================
@@ -332,10 +352,12 @@ exports.config = {
 //  Hooks for test lifecycle
 // =====================================================
 
+
 before: async function (){
     console.log('\n========== TEST SESSION START ==========');
     console.log(`🚀 Environment: ${label}`);
     console.log(`📦 App path: ${appPath}`);
+    await browser.sharedStore.set('didSkip', false);
     await browser.sharedStore.set('env', {
         envName: envConfig.envName,
         resetStrategy: envConfig.resetStrategy,
@@ -346,7 +368,17 @@ before: async function (){
 }, 
 
 beforeTest: async function (test, context) {
-    console.log(`\n--- STARTING TEST: ${test.title} ---`);
+  const appPackage = 'com.socialnmobile.dictapps.notepad.color.note';
+  await driver.terminateApp(appPackage);
+  await driver.activateApp(appPackage);
+
+  console.log(`\n--- STARTING TEST: ${test.title} ---`);
+  const didSkip = await browser.sharedStore.get('didSkip');
+
+  if (!didSkip) {
+    try { await EditNoteScreen.skipTutorial(); } catch {}
+    await browser.sharedStore.set('didSkip', true);
+  }
 },
 
 afterTest: async function (test, context, { passed}) {
